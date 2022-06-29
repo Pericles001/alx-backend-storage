@@ -1,6 +1,7 @@
---a SQL script that creates a stored procedure ComputeAverageWeightedScoreForUser
--- that computes and store the average weighted score for a student.
+--a SQL script that creates a stored procedure ComputeAverageWeightedScoreForUser that computes and store the average weighted score for a student.
+
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS ComputeAverageWeightedScoreForUser;
 CREATE PROCEDURE ComputeAverageWeightedScoreForUser (IN user_id INT)
 BEGIN
@@ -12,4 +13,5 @@ BEGIN
         WHERE corrections.user_id = user_id
     ) WHERE users.id = user_id; 
 END $$
+
 DELIMITER;
