@@ -5,7 +5,6 @@ Back-endSQLMySQL
 
 -   By Guillaume Plessis, Senior Cloud & System Engineer at WeWork and Guillaume, CTO at Holberton school
 -   Weight: 1
-  Jun 29, 2022 4:00 PM
 
 -   An auto review will be launched at the deadline
 
