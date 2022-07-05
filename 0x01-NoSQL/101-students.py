@@ -3,6 +3,7 @@
 Top students
 """
 
+
 def top_students(mongo_collection):
     """
     returns all students sorted by average score
