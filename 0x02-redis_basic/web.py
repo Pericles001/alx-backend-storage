@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-"""
-Implementing an expiring web cache
-and a tracker
-"""
+""" expiring web cache module """
+
 from functools import wraps
 from typing import Callable
 
@@ -12,21 +10,12 @@ import requests
 redis = redis.Redis()
 
 
-def wrap_request(fn: Callable) -> Callable:
-    """
-    Decorator wrapper
-    :param fn:
-    :return:
-    """
+def wrap_requests(fn: Callable) -> Callable:
+    """ Decorator wrapper """
 
-    wraps(fn)
-
+    @wraps(fn)
     def wrapper(url):
-        """
-        Wrapper for decorator
-        :param url:
-        :return:
-        """
+        """ Wrapper for decorator guy """
         redis.incr(f"count:{url}")
         cached_response = redis.get(f"cached:{url}")
         if cached_response:
@@ -38,12 +27,9 @@ def wrap_request(fn: Callable) -> Callable:
     return wrapper
 
 
-@wrap_request
+@wrap_requests
 def get_page(url: str) -> str:
-    """
-    get page self descriptive
-    :param url:
-    :return:
+    """get page self descriptive
     """
     response = requests.get(url)
     return response.text
