@@ -22,7 +22,7 @@ def count_calls(method: Callable) -> Callable:
     key = method.__qualname__
 
     @wraps(method)
-    def wrapper(self, *args, **kwds):
+    def wrapper(self, *args, **kwargs):
         """
         Wrap
         :param self:
@@ -31,7 +31,7 @@ def count_calls(method: Callable) -> Callable:
         :return:
         """
         self._redis.incr(key)
-        return method(self, *args, **kwds)
+        return method(self, *args, **kwargs)
 
     return wrapper
 
@@ -48,10 +48,10 @@ def call_history(method: Callable) -> Callable:
 
     wraps(method)
 
-    def wrapper(self, *args, **kwds):
+    def wrapper(self, *args, **kwargs):
         """Wrapper of the decorator"""
         self._redis.rpush(inputs, str(args))
-        returned_method = method(self, *args, **kwds)
+        returned_method = method(self, *args, **kwargs)
         self._redis.rpush(outputs, str(returned_method))
         return returned_method
 
