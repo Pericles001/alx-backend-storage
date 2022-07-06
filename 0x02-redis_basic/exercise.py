@@ -43,17 +43,17 @@ def call_history(method: Callable) -> Callable:
     :param method:
     :return:
     """
-    inputs = method.__qualname__ + ":inputs"
-    outputs = method.__qualname__ + ":outputs"
+    key = method.__qualname__
+    i = "".join([key, ":inputs"])
+    o = "".join([key, ":outputs"])
 
-    wraps(method)
-
+    @wraps(method)
     def wrapper(self, *args, **kwargs):
-        """Wrapper of the decorator"""
-        self._redis.rpush(inputs, str(args))
-        returned_method = method(self, *args, **kwargs)
-        self._redis.rpush(outputs, str(returned_method))
-        return returned_method
+        """ Wrapp """
+        self._redis.rpush(i, str(args))
+        res = method(self, *args, **kwargs)
+        self._redis.rpush(o, str(res))
+        return res
 
     return wrapper
 
