@@ -3,12 +3,11 @@
 Redis module
 """
 import sys
-import uuid
+from functools import wraps
+from typing import Union, Optional, Callable
+from uuid import uuid4
 
 import redis
-from uuid import uuid4
-from typing import Union, Optional, Callable
-from functools import wraps
 
 UnionOfTypes = Union[str, bytes, int, float]
 
