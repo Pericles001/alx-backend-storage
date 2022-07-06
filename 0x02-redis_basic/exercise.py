@@ -13,8 +13,7 @@ from functools import wraps
 UnionOfTypes = Union[str, bytes, int, float]
 
 
-
-def count_calls(method:Callable) -> Callable:
+def count_calls(method: Callable) -> Callable:
     """
     a system to count how many
     times methods of the Cache class are called.
@@ -33,9 +32,31 @@ def count_calls(method:Callable) -> Callable:
         :return:
         """
         self._redis.incr(key)
-        return method(self, *args, *kwds)
+        return method(self, *args, **kwds)
+
     return wrapper
 
+
+def call_history(method: Callable) -> Callable:
+    """
+    add its input parameters to one list
+    in redis, and store its output into another list.
+    :param method:
+    :return:
+    """
+    inputs = method.__qualname__ + ":inputs"
+    outputs = method.__qualname__ + ":outputs"
+
+    wraps(method)
+
+    def wrapper(self, *args, **kwds):
+        """Wrapper of the decorator"""
+        self._redis.rpush(inputs, str(args))
+        returned_method = method(self, *args, **kwds)
+        self._redis.rpush(outputs, str(returned_method))
+        return returned_method
+
+    return wrapper
 
 
 class Cache:
@@ -50,6 +71,8 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
+    @call_history
     def store(self, data: UnionOfTypes) -> str:
         """
         generate a random key (e.g. using uuid),
