@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+"""
+Redis module
+"""
 import sys
 import uuid
 
