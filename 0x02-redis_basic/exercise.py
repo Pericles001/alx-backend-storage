@@ -13,6 +13,31 @@ from functools import wraps
 UnionOfTypes = Union[str, bytes, int, float]
 
 
+
+def count_calls(method:Callable) -> Callable:
+    """
+    a system to count how many
+    times methods of the Cache class are called.
+    :param method:
+    :return:
+    """
+    key = method.__qualname__
+
+    @wraps(method)
+    def wrapper(self, *args, **kwds):
+        """
+        Wrap
+        :param self:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        self._redis.incr(key)
+        return method(self, *args, *kwds)
+    return wrapper
+
+
+
 class Cache:
     """
     Cache redis class
