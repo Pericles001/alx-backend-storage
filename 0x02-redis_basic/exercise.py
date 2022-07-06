@@ -1,3 +1,4 @@
+import sys
 import uuid
 
 import redis
@@ -17,7 +18,7 @@ class Cache:
         """
         constructor of the redis model
         """
-        self._redis = redis.Redis
+        self._redis = redis.Redis()
         self._redis.flushdb()
 
     def store(self, data: UnionOfTypes) -> str:
@@ -31,3 +32,25 @@ class Cache:
         key = str(uuid4())
         self._redis.mset({key: data})
         return key
+
+    def get(self, key: str, fn: Optional[Callable] = None) \
+            -> UnionOfTypes:
+        """
+        convert the data back
+        to the desired format
+        :param key:
+        :param fn:
+        :return:
+        """
+        if fn:
+            return fn(self._redis.get(key))
+        data = self._redis.get(key)
+        return data
+
+    def get_int(self: bytes) -> int:
+        """get a number"""
+        return int.from_bytes(self, sys.byteorder)
+
+    def get_str(self: bytes) -> str:
+        """get a string"""
+        return self.decode("utf-8")
